@@ -8,6 +8,8 @@
     <string>Может потребоваться для записи видео с птицами</string>
     <key>NSLocalNetworkUsageDescription</key>
     <string>Allow app to check network connectivity</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Приложению нужен доступ к местоположению для отправки запроса на спасение птицы.</string>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
