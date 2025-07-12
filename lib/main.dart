@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io';
@@ -13,7 +13,11 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() => runApp(const BirdIdentifierApp());
 
@@ -56,93 +60,105 @@ class _BirdIdentifierAppState extends State<BirdIdentifierApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-       title: 'Определитель птиц',
-      scaffoldMessengerKey: _scaffoldMessengerKey,
-      theme: ThemeData(
-        fontFamily: 'ComicSans',
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-  centerTitle: true,
-  backgroundColor: Colors.white, // для светлой темы
-  titleTextStyle: TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-    color: Colors.black,
-  ),
-),
-        textSelectionTheme: const TextSelectionThemeData(
-          selectionColor: Colors.blue,
-          selectionHandleColor: Colors.blue,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          ),
-        ),
-        switchTheme: SwitchThemeData(
-          thumbColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return Colors.blue[500]; // Цвет "шарика" в активном состоянии
-            }
-            return Colors.grey[300]; // Цвет "шарика" в неактивном состоянии
-          }),
-          trackColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return Colors.blue[700]; // Цвет трека в активном состоянии
-            }
-            return Colors.grey[400]; // Цвет трека в неактивном состоянии
-          }),
-        ),
-      ),
-      darkTheme: ThemeData(
-        fontFamily: 'ComicSans',
-        primarySwatch: Colors.blue,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.grey[900],
-        appBarTheme: const AppBarTheme(
-  centerTitle: true,
-  backgroundColor: Color.fromARGB(255, 33, 33, 33),
-  titleTextStyle: TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  ),
-),
-        textSelectionTheme: const TextSelectionThemeData(
-          selectionColor: Colors.blue,
-          selectionHandleColor: Colors.blue,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue[700],
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          ),
-        ),
-        switchTheme: SwitchThemeData(
-          thumbColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return Colors.blue[300]; // Цвет "шарика" в активном состоянии
-            }
-            return Colors.grey[400]; // Цвет "шарика" в неактивном состоянии
-          }),
-          trackColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return Colors.blue[700]; // Цвет трека в активном состоянии
-            }
-            return Colors.grey[600]; // Цвет трека в неактивном состоянии
-          }),
-        ),
-      ),
-      themeMode: _themeMode,
-      home: BirdIdentifierScreen(
-        onThemeToggle: _toggleTheme,
+    return MediaQuery.withNoTextScaling(
+      child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ru'),
+          Locale('en'),
+        ],
+        locale: const Locale('ru'),
+        title: 'Определитель птиц',
         scaffoldMessengerKey: _scaffoldMessengerKey,
+        theme: ThemeData(
+          fontFamily: 'ComicSans',
+          primarySwatch: Colors.blue,
+          brightness: Brightness.light,
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: const AppBarTheme(
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            titleTextStyle: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          textSelectionTheme: const TextSelectionThemeData(
+            selectionColor: Colors.blue,
+            selectionHandleColor: Colors.blue,
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+          ),
+          switchTheme: SwitchThemeData(
+            thumbColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Colors.blue[500];
+              }
+              return Colors.grey[300];
+            }),
+            trackColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Colors.blue[700];
+              }
+              return Colors.grey[400];
+            }),
+          ),
+        ),
+        darkTheme: ThemeData(
+          fontFamily: 'ComicSans',
+          primarySwatch: Colors.blue,
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.grey[900],
+          appBarTheme: const AppBarTheme(
+            centerTitle: true,
+            backgroundColor: Color.fromARGB(255, 33, 33, 33),
+            titleTextStyle: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          textSelectionTheme: const TextSelectionThemeData(
+            selectionColor: Colors.blue,
+            selectionHandleColor: Colors.blue,
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue[700],
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+          ),
+          switchTheme: SwitchThemeData(
+            thumbColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Colors.blue[300];
+              }
+              return Colors.grey[400];
+            }),
+            trackColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Colors.blue[700];
+              }
+              return Colors.grey[600];
+            }),
+          ),
+        ),
+        themeMode: _themeMode,
+        home: BirdIdentifierScreen(
+          onThemeToggle: _toggleTheme,
+          scaffoldMessengerKey: _scaffoldMessengerKey,
+        ),
       ),
     );
   }
@@ -162,10 +178,9 @@ class _BirdIdentifierScreenState extends State<BirdIdentifierScreen> with Ticker
   File? _selectedImage;
   String _result = '';
   bool _isLoading = false;
-  final ImagePicker _picker = ImagePicker();
   String? _species;
   String? _condition;
-  ImageSource? _lastUsedSource;
+  bool _isCameraSource = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final List<Map<String, dynamic>> _analysisHistory = [];
   final List<Map<String, dynamic>> _rescueHistory = [];
@@ -173,11 +188,11 @@ class _BirdIdentifierScreenState extends State<BirdIdentifierScreen> with Ticker
   late AnimationController _rescuePulseController;
   late Animation<double> _rescuePulseScale;
   late Animation<Color?> _rescuePulseColor;
-
+  bool _saveCameraPhotos = false;
 
   bool get _showRescueButton {
     if (_species == null || _condition == null) return false;
-    if (_lastUsedSource != ImageSource.camera) return false;
+    if (!_isCameraSource) return false;
     if (_result.contains('🌐 Источник:')) return false;
 
     final condition = _condition!.toLowerCase();
@@ -188,41 +203,55 @@ class _BirdIdentifierScreenState extends State<BirdIdentifierScreen> with Ticker
   }
 
   @override
-void initState() {
-  super.initState();
-  _loadHistory();
-  _loadRescueHistory();
-  _animationController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 400),
-  );
+  void initState() {
+    super.initState();
+    _loadHistory();
+    _loadRescueHistory();
+    _loadSaveCameraPhotos();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
 
-_rescuePulseController = AnimationController(
-  vsync: this,
-  duration: const Duration(milliseconds: 1000),
-)..repeat(reverse: true);
+    _rescuePulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
 
-_rescuePulseScale = Tween<double>(begin: 1.0, end: 1.08).animate(
-  CurvedAnimation(parent: _rescuePulseController, curve: Curves.easeInOut),
-);
+    _rescuePulseScale = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _rescuePulseController, curve: Curves.easeInOut),
+    );
 
-_rescuePulseColor = ColorTween(
-  begin: Colors.redAccent,
-  end: Colors.red,
-).animate(
-  CurvedAnimation(parent: _rescuePulseController, curve: Curves.easeInOut),
-);
+    _rescuePulseColor = ColorTween(
+      begin: Colors.redAccent,
+      end: Colors.red,
+    ).animate(
+      CurvedAnimation(parent: _rescuePulseController, curve: Curves.easeInOut),
+    );
 
-  // запуск анимации при загрузке
-  _animationController.forward();
-}
+    _animationController.forward();
+  }
 
   @override
   void dispose() {
     _animationController.dispose();
-    super.dispose();
-
     _rescuePulseController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadSaveCameraPhotos() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _saveCameraPhotos = prefs.getBool('saveCameraPhotos') ?? false;
+    });
+  }
+
+  Future<void> _saveCameraPhotosSetting(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('saveCameraPhotos', value);
+    setState(() {
+      _saveCameraPhotos = value;
+    });
   }
 
   Future<void> _loadRescueHistory() async {
@@ -248,28 +277,29 @@ _rescuePulseColor = ColorTween(
   Future<void> _saveRescueHistory() async {
     final prefs = await SharedPreferences.getInstance();
     final historyJson = jsonEncode(_rescueHistory.map((item) => {
-      'date': item['date'].toIso8601String(),
-      'species': item['species'],
-      'condition': item['condition'],
-      'location': item['location'],
-      'message': item['message'],
-      'imagePath': item['imagePath'],
-    }).toList());
+          'date': item['date'].toIso8601String(),
+          'species': item['species'],
+          'condition': item['condition'],
+          'location': item['location'],
+          'message': item['message'],
+          'imagePath': item['imagePath'],
+        }).toList());
     await prefs.setString('rescueHistory', historyJson);
   }
 
   Future<String?> _saveImagePermanently(File image) async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'bird_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final newPath = '${directory.path}/$fileName';
-      final newFile = await image.copy(newPath);
-      return newFile.path;
-    } catch (e) {
-      print('Ошибка сохранения изображения: $e');
-      return null;
-    }
+  if (!_saveCameraPhotos) return null;
+  try {
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = 'bird_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final newPath = '${directory.path}/$fileName';
+    final newFile = await image.copy(newPath);
+    return newFile.path;
+  } catch (e) {
+    print('Ошибка сохранения изображения: $e');
+    return null;
   }
+}
 
   Future<void> _loadHistory() async {
     final prefs = await SharedPreferences.getInstance();
@@ -279,26 +309,27 @@ _rescuePulseColor = ColorTween(
       setState(() {
         _analysisHistory.addAll(historyList.map((item) {
           final imagePath = item['imagePath'];
-          if (imagePath != null) {
-            final file = File(imagePath);
-            if (!file.existsSync()) {
-              return {
-                'date': DateTime.parse(item['date']),
-                'species': item['species'],
-                'condition': item['condition'],
-                'result': item['result'],
-                'imagePath': null
-              };
-            }
+          if (imagePath == null) return null;
+
+          final file = File(imagePath);
+          if (!file.existsSync()) {
+            return {
+              'date': DateTime.parse(item['date']),
+              'species': item['species'],
+              'condition': item['condition'],
+              'result': item['result'],
+              'imagePath': null,
+            };
           }
+
           return {
             'date': DateTime.parse(item['date']),
             'species': item['species'],
             'condition': item['condition'],
             'result': item['result'],
-            'imagePath': imagePath
+            'imagePath': imagePath,
           };
-        }).toList());
+        }).whereType<Map<String, dynamic>>().toList());
       });
     }
   }
@@ -306,12 +337,12 @@ _rescuePulseColor = ColorTween(
   Future<void> _saveHistory() async {
     final prefs = await SharedPreferences.getInstance();
     final historyJson = jsonEncode(_analysisHistory.map((item) => {
-      'date': item['date'].toIso8601String(),
-      'species': item['species'],
-      'condition': item['condition'],
-      'result': item['result'],
-      'imagePath': item['imagePath'],
-    }).toList());
+          'date': item['date'].toIso8601String(),
+          'species': item['species'],
+          'condition': item['condition'],
+          'result': item['result'],
+          'imagePath': item['imagePath'],
+        }).toList());
     await prefs.setString('analysisHistory', historyJson);
   }
 
@@ -342,7 +373,8 @@ _rescuePulseColor = ColorTween(
   Future<File?> _compressImage(File image) async {
     try {
       final fileSize = await image.length();
-      if (fileSize < 1000000) return image;
+      print('Исходный размер изображения: $fileSize байт');
+      if (fileSize < 500000) return image;
 
       final tempDir = Directory.systemTemp;
       final targetPath = '${tempDir.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -350,9 +382,9 @@ _rescuePulseColor = ColorTween(
       final compressedFile = await FlutterImageCompress.compressAndGetFile(
         image.absolute.path,
         targetPath,
-        quality: 85,
-        minWidth: 1024,
-        minHeight: 1024,
+        quality: 60,
+        minWidth: 600,
+        minHeight: 600,
         format: CompressFormat.jpeg,
       );
 
@@ -362,7 +394,8 @@ _rescuePulseColor = ColorTween(
       }
 
       final compressedSize = await compressedFile.length();
-      if (compressedSize > 10000000) {
+      print('Размер сжатого изображения: $compressedSize байт');
+      if (compressedSize > 4_000_000) {
         print('Ошибка: Сжатое изображение слишком большое');
         return null;
       }
@@ -375,14 +408,21 @@ _rescuePulseColor = ColorTween(
   }
 
   Future<String> _analyzeImage(File image) async {
-    const serverUrl = 'https://proxy-server-rho-seven.vercel.app/generate';
+    const serverUrl = 'https://gemini-proxy-nine-alpha.vercel.app/generate';
     const prompt = '''
-Ты — эксперт распознаванию птиц. Твоя задача — определить реальный вид птицы на изображении, включая даже самых маленьких (например, синиц, крапивников, воробьёв, карликовых и других). Некоторые птицы действительно могут быть очень миниатюрными — это не повод считать их игрушками или скульптурами. Будь особенно внимателен, чтобы не перепутать маленькую живую птицу с искусственным объектом. Обращай особое внимание на детали: структуру перьев, клюва, лап, поведение, фон и взаимодействие с рукой человека - у реальных птиц они выглядят естественно. Если видишь перья, натуральную текстуру, реалистичное поведение (например, птица сидит на пальце) — не пиши, что это скульптура или фейк. Скульптуры обычно имеют неестественные пропорции или материалы (металл, камень). Отвечай только при 100% уверенности, исключая слова "наверное", "возможно", "скорее всего". Если на изображении птица (включая живых птиц, рисунки, мультяшных персонажей, другие изображения птиц):   
-Проверь, нет ли ошибки в предоставленных данных (например, неверное название вида). Если предоставленные данные содержат ошибку, укажи это в примечании. Следуй строгой инструкции:
+Ты — эксперт по орнитологии с навыками компьютерного зрения и по распознаванию птиц. Твоя задача — максимально точно определить вид птицы на изображении, включая даже самых маленьких (например, синиц, крапивников, воробьёв, карликовых и других). Для повышения точности дополнительно проверяй информацию в интернете, используя достоверные источники (например, eBird, Cornell Lab of Ornithology, научные статьи) для подтверждения визуальных признаков. Обращай особое внимание на различия между Шлемоносной цесаркой и Глазчатой индейкой. Ключевые отличия: Шлемоносная цесарка: серое тело с белыми точками, костный "шлем" на голове, Африка. Глазчатая индейка: тёмное оперение с "глазками" на хвосте, сине-оранжевая голова, Юкатан. Важно: Если видишь "глазчатые" перья или оранжевые бусины на голове — это индейка, не цесарка! Некоторые птицы действительно могут быть очень миниатюрными — это не повод считать их игрушками или скульптурами. Будь особенно внимателен, чтобы не перепутать маленькую живую птицу с искусственным объектом. Обращай внимание на детали:
+Перья: текстура, расположение, цвет (естественные градиенты, возможные дефекты).
+Клюв/лапы: форма, структура (у живых птиц — естественные неровности, у арт-объектов — идеализированные линии).
+Поведение/поза: динамика (например, напряжение лап на ветке) или статичность (как у чучел).
+Фон: согласованность с естественной средой обитания вида.
+Если видишь перья, натуральную текстуру, реалистичное поведение (например, птица сидит на пальце) — не пиши, что это скульптура или фейк. Скульптуры обычно имеют неестественные пропорции или материалы (металл, камень). Отвечай только при 100% уверенности, исключая слова "наверное", "возможно", "скорее всего". Избегай предположений. Если на изображении птица (включая живых птиц, рисунки, мультяшных персонажей, другие изображения птиц):
+Проверь, нет ли ошибки в предоставленных данных (например, неверное название вида). Если предоставленные данные содержат ошибку, укажи это в примечании. Ошибки в данных: если предоставленное название не совпадает с визуальными признаками, укажи это. Сравни визуальные признаки с данными из интернета (например, фотографии видов на eBird или в научных базах) для подтверждения идентификации.
+
+Следуй строгой инструкции:
 
 1. Если это птица (включая рисунки, мультяшных персонажей, скульптуры и другие изображения птиц), ответь по пунктам:
 1. Вид: [название на русском и на латыни]
-2. Описание: [3–5 точных фактов о виде]
+2. Описание: [3–5 точных фактов о виде, включая среду обитания, особенности оперения, поведения или отличия от похожих видов]
 3. Состояние: [оценка здоровья, при необходимости — рекомендации]
 4. Если изображение НЕ было сделано в реальных условиях (например, это снимок экрана, фотографии с бумаги, монитора и т.п.), и также если оно было сделано в реальной жизни укажи это. Обязательно укажи это в новой строке, начинающейся с:
 🌐 Источник: [укажи откуда]
@@ -391,16 +431,18 @@ _rescuePulseColor = ColorTween(
 - Что изображено: [описание]
 - Сообщение: На изображении нет птицы. Анализ невозможен. Пожалуйста, загрузите фото птицы.
 ''';
-
     try {
       final compressedImage = await _compressImage(image);
       if (compressedImage == null) {
-        print('Ошибка: Не удалось сжать изображение');
-        return 'Ошибка: Не удалось сжать изображение';
+        return '⚠️ Ошибка: Не удалось сжать изображение';
       }
 
       final imageBytes = await compressedImage.readAsBytes();
       final base64Image = base64Encode(imageBytes);
+      print('Размер base64: ${base64Image.length} байт');
+      if (base64Image.length > 4_000_000) {
+        return '⚠️ Ошибка: Размер изображения превышает 4 МБ';
+      }
 
       final response = await http.post(
         Uri.parse(serverUrl),
@@ -409,33 +451,43 @@ _rescuePulseColor = ColorTween(
           'prompt': prompt,
           'image_base64': base64Image,
         }),
-      ).timeout(const Duration(seconds: 30));
+      ).timeout(const Duration(seconds: 30), onTimeout: () {
+        throw TimeoutException('Request timed out after 30 seconds');
+      });
 
-      print('Ответ сервера: statusCode=${response.statusCode}, body=${response.body}');
+      print('Статус: ${response.statusCode}, Тело: ${response.body}');
 
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         final result = jsonResponse['response'] ?? 'Не получилось распознать ответ';
         if (result.trim() == 'Вид: Птица' || result.trim().isEmpty) {
-          return '⚠️ Ошибка: Сервер не смог точно распознать вид птицы. Попробуйте загрузить другое изображение.';
+          return '⚠️ Ошибка: Сервер не смог точно распознать вид птицы.';
         }
         return result;
-      } else if (response.statusCode == 503) {
-        return '⚠️ Ошибка 503: Сервер временно недоступен. Попробуйте позже.';
       } else if (response.statusCode == 413) {
-        return '⚠️ Ошибка 413: Загружаемый файл слишком большой. Попробуйте уменьшить изображение.';
+        return '⚠️ Ошибка 413: Изображение слишком большое. Попробуйте загрузить меньшее изображение.';
+      } else if (response.statusCode == 504) {
+        return '⚠️ Ошибка 504: Сервер не успел обработать запрос. Попробуйте позже.';
+      } else if (response.statusCode == 502) {
+        return '⚠️ Ошибка 502: Ошибка соединения с сервером. Проверьте интернет и попробуйте снова.';
       } else {
-        return '⚠️ Ошибка сервера: ${response.statusCode}';
+        return '⚠️ Ошибка сервера: ${response.statusCode}, ${response.body}';
       }
+    } on SocketException catch (e) {
+      print('SocketException: $e');
+      return '⚠️ Ошибка соединения: Не удалось подключиться к серверу. Проверьте интернет и попробуйте снова.';
+    } on TimeoutException catch (e) {
+      print('TimeoutException: $e');
+      return '⚠️ Ошибка: Запрос превысил время ожидания. Попробуйте снова.';
     } catch (e) {
-      print('Ошибка при анализе изображения: $e');
+      print('Ошибка: $e');
       return '⚠️ Ошибка: $e';
     }
   }
 
   String _processResponse(String text) {
     text = text.trim();
-    if (text.isEmpty || text == 'Вид: Птица') {
+    if (text.isEmpty) {
       return '⚠️ Пустой или некорректный ответ от сервера';
     }
 
@@ -455,13 +507,13 @@ _rescuePulseColor = ColorTween(
     );
 
     text = text.replaceAllMapped(
-      RegExp(r'^3\.\s*Состояние:(.*)', multiLine: true),
-      (match) => '❤️ Состояние:${match.group(1)}',
+      RegExp(r'^3\.\s*(Состояние|Уверенность):(.*)', multiLine: true),
+      (match) => '❤️ ${match.group(1)}:${match.group(2)}',
     );
 
     text = text.replaceAllMapped(
-      RegExp(r'^🌐\s*Источник:(.*)', multiLine: true),
-      (match) => '🌐 Источник:${match.group(1)}',
+      RegExp(r'^4\.\s*(Источник):(.*)', multiLine: true),
+      (match) => '🌐 ${match.group(1)}:${match.group(2)}',
     );
 
     text = text.replaceAllMapped(
@@ -472,113 +524,163 @@ _rescuePulseColor = ColorTween(
     return text;
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    if (_isLoading) return;
+  Future<void> _pickImage(bool useCamera) async {
+  if (_isLoading) return;
 
-    try {
-      if (!await _checkInternet()) {
-        setState(() => _result = '⚠️ Ошибка: Нет интернет-соединения. Проверьте подключение и попробуйте снова.');
-        return;
-      }
-
-      if (source == ImageSource.camera) {
-        if (!Platform.isAndroid && !Platform.isIOS) {
-          setState(() => _result = '⚠️ Ошибка: Камера не поддерживается на этой платформе');
-          return;
-        }
-
-        final status = await Permission.camera.request();
-        if (!status.isGranted) {
-          if (status.isPermanentlyDenied) {
-            await openAppSettings();
-            setState(() => _result = '⚠️ Разрешение было полностью запрещено. Пожалуйста, предоставьте доступ к камере в настройках приложения.');
-          } else {
-            setState(() => _result = '⚠️ Для использования камеры необходимо предоставить разрешение');
-          }
-          return;
-        }
-      }
-
-      final pickedFile = await _picker.pickImage(
-        source: source,
-        maxWidth: 1024,
-        maxHeight: 1024,
-        imageQuality: 85,
-      );
-      if (pickedFile == null) {
-        setState(() => _result = '⚠️ Ошибка: Изображение не выбрано');
-        return;
-      }
-
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-        _isLoading = true;
-        _result = '';
-        _lastUsedSource = source;
-      });
-
-      final response = await _analyzeImage(_selectedImage!);
-      final savedImagePath = await _saveImagePermanently(_selectedImage!);
-
-      setState(() {
-        _result = _processResponse(response);
-        final lines = response.split('\n');
-
-        bool isFakeSource = false;
-
-        for (var line in lines) {
-          if (line.startsWith('1. Вид:')) {
-            _species = line.replaceFirst('1. Вид:', '').trim();
-          } else if (line.startsWith('3. Состояние:')) {
-            _condition = line.replaceFirst('3. Состояние:', '').trim();
-          } else if (line.startsWith('🌐 Источник:')) {
-            isFakeSource = true;
-          }
-        }
-
-        if (isFakeSource) {
-          _lastUsedSource = null;
-        }
-
-        final now = DateTime.now();
-        final newEntry = {
-          'date': now.toIso8601String(),
-          'species': _species,
-          'condition': _condition,
-          'result': _result,
-          'imagePath': savedImagePath
-        };
-
-        String? lastEntryJson;
-        if (_analysisHistory.isNotEmpty) {
-          final last = _analysisHistory.last;
-          lastEntryJson = jsonEncode({
-            'date': (last['date'] is DateTime)
-                ? (last['date'] as DateTime).toIso8601String()
-                : last['date'],
-            'species': last['species'],
-            'condition': last['condition'],
-            'result': last['result'],
-            'imagePath': last['imagePath'],
-          });
-        }
-
-        final newEntryJson = jsonEncode(newEntry);
-
-        if (_analysisHistory.isEmpty || lastEntryJson != newEntryJson) {
-          _analysisHistory.add({
-            ...newEntry,
-            'date': now,
-          });
-          _saveHistory();
-        }
-      });
-    } catch (e) {
-      setState(() => _result = '⚠️ Ошибка: ${e.toString()}');
-    } finally {
-      setState(() => _isLoading = false);
+   try {
+    // Проверяем наличие интернета, используя _checkInternet()
+    if (!await _checkInternet()) {
+      setState(() => _result = '⚠️ Ошибка: Нет интернет-соединения. Проверьте подключение и попробуйте снова.');
+      return;
     }
+    
+    File? selectedFile;
+
+    if (useCamera) {
+      if (!Platform.isAndroid && !Platform.isIOS) {
+        setState(() => _result = '⚠️ Камера не поддерживается на этой платформе');
+        return;
+      }
+
+      final status = await Permission.camera.request();
+      if (!status.isGranted) {
+        if (status.isPermanentlyDenied) {
+          await openAppSettings();
+          setState(() => _result = '⚠️ Разрешение было полностью запрещено. Пожалуйста, предоставьте доступ к камере в настройках приложения.');
+        } else {
+          setState(() => _result = '⚠️ Для использования камеры необходимо предоставить разрешение');
+        }
+        return;
+      }
+
+      final XFile? picked = await ImagePicker().pickImage(source: ImageSource.camera);
+
+      if (picked == null) {
+        setState(() => _result = '⚠️ Изображение не выбрано');
+        return;
+      }
+
+      final tempFile = File(picked.path);
+
+      // Сохраняем в галерею через MediaStore, если включена галочка
+if (_saveCameraPhotos) {
+  const channel = MethodChannel('com.example.bird_identifier/media');
+  try {
+    final fileName = 'IMG_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    await channel.invokeMethod('saveToGallery', {
+      'path': tempFile.path,
+      'name': fileName,
+    });
+  } catch (e) {
+    print('Ошибка при сохранении фото в галерею: $e');
   }
+}
+
+selectedFile = tempFile;
+
+    } else {
+      final status = await Permission.photos.request();
+      if (!status.isGranted) {
+        if (status.isPermanentlyDenied) {
+          await openAppSettings();
+          setState(() => _result = '⚠️ Разрешение было полностью запрещено. Пожалуйста, предоставьте доступ к галерее в настройках приложения.');
+        } else {
+          setState(() => _result = '⚠️ Для доступа к галерее необходимо предоставить разрешение');
+        }
+        return;
+      }
+
+      final List<AssetEntity>? assets = await AssetPicker.pickAssets(
+        context,
+        pickerConfig: AssetPickerConfig(
+          maxAssets: 1,
+          requestType: RequestType.image,
+          selectedAssets: [],
+          textDelegate: const RussianAssetPickerTextDelegate(),
+        ),
+      );
+
+      if (assets == null || assets.isEmpty) {
+        setState(() => _result = '⚠️ Изображение не выбрано');
+        return;
+      }
+
+      selectedFile = await assets.first.file;
+    }
+
+    if (selectedFile == null) {
+      setState(() => _result = '⚠️ Ошибка: Не удалось получить файл изображения');
+      return;
+    }
+
+    setState(() {
+      _selectedImage = selectedFile;
+      _isLoading = true;
+      _result = '';
+      _isCameraSource = useCamera;
+    });
+
+    final response = await _analyzeImage(_selectedImage!);
+    final savedImagePath = await _saveImagePermanently(_selectedImage!);
+
+    setState(() {
+      _result = _processResponse(response);
+      final lines = response.split('\n');
+      bool isFakeSource = false;
+
+      for (var line in lines) {
+        if (line.startsWith('1. Вид:')) {
+          _species = line.replaceFirst('1. Вид:', '').trim();
+        } else if (line.startsWith('3. Состояние:')) {
+          _condition = line.replaceFirst('3. Состояние:', '').trim();
+        } else if (line.startsWith('🌐 Источник:')) {
+          isFakeSource = true;
+        }
+      }
+
+      if (isFakeSource) {
+        _isCameraSource = false;
+      }
+
+      final now = DateTime.now();
+      final newEntry = {
+        'date': now.toIso8601String(),
+        'species': _species,
+        'condition': _condition,
+        'result': _result,
+        'imagePath': savedImagePath,
+      };
+
+      String? lastEntryJson;
+      if (_analysisHistory.isNotEmpty) {
+        final last = _analysisHistory.last;
+        lastEntryJson = jsonEncode({
+          'date': (last['date'] is DateTime)
+              ? (last['date'] as DateTime).toIso8601String()
+              : last['date'],
+          'species': last['species'],
+          'condition': last['condition'],
+          'result': last['result'],
+          'imagePath': last['imagePath'],
+        });
+      }
+
+      final newEntryJson = jsonEncode(newEntry);
+
+      if (_analysisHistory.isEmpty || lastEntryJson != newEntryJson) {
+        _analysisHistory.add({
+          ...newEntry,
+          'date': now,
+        });
+        _saveHistory();
+      }
+    });
+  } catch (e) {
+    setState(() => _result = '⚠️ Ошибка: ${e.toString()}');
+  } finally {
+    setState(() => _isLoading = false);
+  }
+}
 
   Future<Widget> _getImageWidget(String? path) async {
     if (path == null) return const Icon(Icons.photo);
@@ -602,15 +704,17 @@ _rescuePulseColor = ColorTween(
 
   void _showHistoryDialog() {
     if (_analysisHistory.isEmpty) {
-  Navigator.pop(context); // закрыть диалог
-  Navigator.of(context).pop(); // закрыть боковое меню
-  Future.delayed(const Duration(milliseconds: 100), () {
-    widget.scaffoldMessengerKey.currentState?.showSnackBar(
-      const SnackBar(content: Text('История анализов пуста'), duration: Duration(seconds: 2)),
-    );
-  });
-  return;
-}
+      Navigator.of(context).pop();
+      Future.delayed(const Duration(milliseconds: 100), () {
+        widget.scaffoldMessengerKey.currentState?.showSnackBar(
+          const SnackBar(
+            content: Text('История анализов пуста'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+      return;
+    }
 
     showDialog(
       context: context,
@@ -637,27 +741,23 @@ _rescuePulseColor = ColorTween(
                               return const Icon(Icons.photo);
                             },
                           )
-                        : const Icon(Icons.photo),
+                        : const Icon(Icons.audiotrack),
                     title: Text(item['species'] ?? 'Неизвестный вид'),
                     subtitle: Text(
                       '${item['date'].toString().substring(0, 16)}\n'
                       'Состояние: ${item['condition']?.split('\n').first ?? ''}',
                     ),
                     onTap: () {
-  Navigator.pop(context); // закрывает диалог
-  Navigator.of(context).pop(); // закрывает Drawer
-
-  setState(() {
-    if (item['imagePath'] != null) {
-      _selectedImage = File(item['imagePath']);
-    } else {
-      _selectedImage = null;
-    }
-    _result = item['result'];
-    _species = item['species'];
-    _condition = item['condition'];
-  });
-},
+                      Navigator.pop(context);
+                      Navigator.of(this.context).pop();
+                      setState(() {
+                        _selectedImage = item['imagePath'] != null ? File(item['imagePath']) : null;
+                        _result = item['result'];
+                        _species = item['species'];
+                        _condition = item['condition'];
+                        _isCameraSource = item['imagePath'] != null && item['imagePath'].isNotEmpty;
+                      });
+                    },
                   ),
                 );
               },
@@ -685,16 +785,12 @@ _rescuePulseColor = ColorTween(
                     actions: [
                       AnimatedTextButton(
                         onPressed: () => Navigator.pop(context, true),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.blue,
-                        ),
+                        style: TextButton.styleFrom(foregroundColor: Colors.blue),
                         child: const Text('Да'),
                       ),
                       AnimatedTextButton(
                         onPressed: () => Navigator.pop(context, false),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.blue,
-                        ),
+                        style: TextButton.styleFrom(foregroundColor: Colors.blue),
                         child: const Text('Нет'),
                       ),
                     ],
@@ -707,22 +803,26 @@ _rescuePulseColor = ColorTween(
                   });
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.remove('analysisHistory');
+
                   Navigator.pop(context);
-                  widget.scaffoldMessengerKey.currentState?.showSnackBar(
-                    const SnackBar(content: Text('История успешно очищена'), duration: Duration(seconds: 2)),
-                  );
+                  Navigator.of(this.context).pop();
+
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    widget.scaffoldMessengerKey.currentState?.showSnackBar(
+                      const SnackBar(
+                        content: Text('История успешно очищена'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  });
                 }
               },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.blue,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.blue),
               child: const Text('Очистить'),
             ),
             AnimatedTextButton(
               onPressed: () => Navigator.pop(context),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.blue,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.blue),
               child: const Text('Закрыть'),
             ),
           ],
@@ -733,14 +833,17 @@ _rescuePulseColor = ColorTween(
 
   void _showRescueHistoryDialog() {
     if (_rescueHistory.isEmpty) {
-  Navigator.pop(context);
-  Future.delayed(const Duration(milliseconds: 100), () {
-    widget.scaffoldMessengerKey.currentState?.showSnackBar(
-      const SnackBar(content: Text('История запросов о помощи пуста'), duration: Duration(seconds: 2)),
-    );
-  });
-  return;
-}
+      Navigator.of(context).pop();
+      Future.delayed(const Duration(milliseconds: 100), () {
+        widget.scaffoldMessengerKey.currentState?.showSnackBar(
+          const SnackBar(
+            content: Text('История запросов о помощи пуста'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+      return;
+    }
 
     showDialog(
       context: context,
@@ -749,12 +852,7 @@ _rescuePulseColor = ColorTween(
           final Map<int, bool> expandedTiles = {};
 
           return AlertDialog(
-            title: const Center(
-              child: Text(
-                'История запросов о помощи',
-                textAlign: TextAlign.center,
-              ),
-            ),
+            title: const Center(child: Text('История запросов о помощи')),
             content: SizedBox(
               width: double.maxFinite,
               child: ListView.builder(
@@ -840,16 +938,12 @@ _rescuePulseColor = ColorTween(
                           actions: [
                             AnimatedTextButton(
                               onPressed: () => Navigator.pop(context, true),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.blue,
-                              ),
+                              style: TextButton.styleFrom(foregroundColor: Colors.blue),
                               child: const Text('Да'),
                             ),
                             AnimatedTextButton(
                               onPressed: () => Navigator.pop(context, false),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.blue,
-                              ),
+                              style: TextButton.styleFrom(foregroundColor: Colors.blue),
                               child: const Text('Нет'),
                             ),
                           ],
@@ -861,23 +955,27 @@ _rescuePulseColor = ColorTween(
                           _rescueHistory.clear();
                         });
                         await _saveRescueHistory();
+
                         Navigator.pop(context);
-                        widget.scaffoldMessengerKey.currentState?.showSnackBar(
-                          const SnackBar(content: Text('История запросов очищена'), duration: Duration(seconds: 2)),
-                        );
+                        Navigator.of(this.context).pop();
+
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          widget.scaffoldMessengerKey.currentState?.showSnackBar(
+                            const SnackBar(
+                              content: Text('История запросов очищена'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        });
                       }
                     },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                    ),
+                    style: TextButton.styleFrom(foregroundColor: Colors.blue),
                     child: const Text('Очистить'),
                   ),
                   const SizedBox(width: 20),
                   AnimatedTextButton(
                     onPressed: () => Navigator.pop(context),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                    ),
+                    style: TextButton.styleFrom(foregroundColor: Colors.blue),
                     child: const Text('Закрыть'),
                   ),
                 ],
@@ -1039,30 +1137,29 @@ _rescuePulseColor = ColorTween(
   }
 
   @override
-Widget build(BuildContext context) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final baseFontSize = screenWidth < 360 ? 12.0 : screenWidth < 600 ? 14.0 : 16.0;
-  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final baseFontSize = screenWidth < 360 ? 12.0 : screenWidth < 600 ? 14.0 : 16.0;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-  // Добавляем проверку, просматриваем ли мы из истории
-  final isViewingFromHistory = ModalRoute.of(context)?.settings.name == '/history';
+    final isViewingFromHistory = ModalRoute.of(context)?.settings.name == '/history';
 
-  return Scaffold(
-    key: _scaffoldKey,
-    drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.3,
-    drawerEnableOpenDragGesture: true,
-    appBar: AppBar(
-      title: const Text(
-        'Определитель птиц',
-        style: TextStyle(
-          fontFamily: 'ComicSans',
+    return Scaffold(
+      key: _scaffoldKey,
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.3,
+      drawerEnableOpenDragGesture: true,
+      appBar: AppBar(
+        title: const Text(
+          'Определитель птиц',
+          style: TextStyle(
+            fontFamily: 'ComicSans',
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
       ),
-      leading: IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-      ),
-    ),
       drawer: Drawer(
   child: LayoutBuilder(
     builder: (context, constraints) {
@@ -1071,11 +1168,10 @@ Widget build(BuildContext context) {
           constraints: BoxConstraints(minHeight: constraints.maxHeight),
           child: IntrinsicHeight(
             child: Container(
-              color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white, // 👈 общий фон
+              color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Верхняя часть
                   Container(
                     decoration: BoxDecoration(
                       color: isDarkMode ? const Color(0xFF1D1B20) : Colors.blue[100],
@@ -1105,80 +1201,70 @@ Widget build(BuildContext context) {
                     ),
                   ),
 
-                  // Кнопки меню
-                  Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.history, color: isDarkMode ? Colors.white70 : Colors.black87),
-                        title: Text('История анализов', style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
-                        onTap: () => _showHistoryDialog(),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.help_outline, color: isDarkMode ? Colors.white70 : Colors.black87),
-                        title: Text('История запросов о помощи', style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
-                        onTap: () => _showRescueHistoryDialog(),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.brightness_6, color: isDarkMode ? Colors.white70 : Colors.black87),
-                        title: Text('Тема', style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
-                        subtitle: Text(
-                          isDarkMode ? 'Тёмная' : 'Светлая',
-                          style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black87),
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.history,
+                              color: isDarkMode ? Colors.white70 : Colors.black87),
+                          title: Text('История анализов',
+                              style: TextStyle(
+                                  color: isDarkMode ? Colors.white : Colors.black)),
+                          onTap: () => _showHistoryDialog(),
                         ),
-                        trailing: Switch(
-                          value: isDarkMode,
-                          onChanged: (value) => widget.onThemeToggle(value),
+                        ListTile(
+                          leading: Icon(Icons.help_outline,
+                              color: isDarkMode ? Colors.white70 : Colors.black87),
+                          title: Text('История запросов о помощи',
+                              style: TextStyle(
+                                  color: isDarkMode ? Colors.white : Colors.black)),
+                          onTap: () => _showRescueHistoryDialog(),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 
-                  // Заполнитель пространства — теперь внутри цветного контейнера
-                  Expanded(child: SizedBox()),
+                  // Увеличенный отступ для поднятия кнопки
+                  const SizedBox(height: 20),
 
-                  // Нижний блок с авторами
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16.0),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Авторы программы:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.white : Colors.black,
+                  // Уже по бокам + приподнята
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    child: AnimatedElevatedButton(
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingsScreen(
+                              onThemeToggle: widget.onThemeToggle,
+                              isDarkMode: isDarkMode,
+                              onSaveCameraPhotosToggle: _saveCameraPhotosSetting,
+                              saveCameraPhotos: _saveCameraPhotos,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text('Кривошеенко Данил Дмитриевич', style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black87)),
-                          Text('Панов Максим Романович', style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black87)),
-                          Text('Полежаев Дмитрий Дмитриевич', style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black87)),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Тестировщик:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text('Козлов Матвей Евгеньевич', style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black87)),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Официальная почта:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          Text('perozhizni@gmail.com', style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black87)),
-                        ],
+                        );
+                      },
+                      icon: Icon(Icons.settings,
+                          color: isDarkMode ? Colors.white : Colors.black),
+                      child: Text(
+                        'Настройки',
+                        style: TextStyle(
+                            color: isDarkMode ? Colors.white : Colors.black),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDarkMode
+                            ? const Color(0xFF003366)
+                            : Colors.blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        minimumSize: const Size.fromHeight(45),
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -1189,111 +1275,133 @@ Widget build(BuildContext context) {
   ),
 ),
       body: Center(
-  child: SingleChildScrollView(
-    padding: const EdgeInsets.all(20),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          constraints: const BoxConstraints(maxHeight: 400),
-          decoration: BoxDecoration(
-            color: isDarkMode
-                ? const Color.fromARGB(255, 21, 38, 51)
-                : const Color.fromARGB(255, 188, 230, 250),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isDarkMode ? const Color(0xFF003366) : Colors.blue,
-              width: 2,
-            ),
-          ),
-          child: _selectedImage != null
-              ? GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ImageZoomScreen(image: _selectedImage!),
-                      ),
-                    );
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.file(
-                      _selectedImage!,
-                      fit: BoxFit.contain,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxHeight: 350,
                     ),
-                  ),
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.cloud_upload,
-                      size: 50,
-                      color: isDarkMode ? Colors.blue[300] : Colors.blue,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Загрузите изображение птицы',
-                      style: TextStyle(
-                        fontSize: baseFontSize + 2,
-                        color: isDarkMode ? Colors.blue[300] : Colors.blue,
-                        fontWeight: FontWeight.bold,
+                    decoration: BoxDecoration(
+                      color: isDarkMode
+                          ? const Color.fromARGB(255, 21, 38, 51)
+                          : const Color.fromARGB(255, 188, 230, 250),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isDarkMode ? const Color(0xFF003366) : Colors.blue,
+                        width: 2,
                       ),
                     ),
-                  ],
+                    child: _selectedImage != null
+                        ? GestureDetector(
+                            onTap: () async {
+                              final File? editedImage = await Navigator.push<File?>(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ImageZoomScreen(image: _selectedImage!),
+                                ),
+                              );
+
+                              if (editedImage != null) {
+                                setState(() {
+                                  _selectedImage = editedImage;
+                                  _result = '';
+                                  _isLoading = true;
+                                });
+
+                                final response = await _analyzeImage(editedImage);
+
+                                setState(() {
+                                  _result = _processResponse(response);
+                                  _isLoading = false;
+                                });
+                              }
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: FittedBox(
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center,
+                                child: Image.file(_selectedImage!),
+                              ),
+                            ),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.cloud_upload,
+                                size: 50,
+                                color: isDarkMode ? Colors.blue[300] : Colors.blue,
+                              ),
+                              const SizedBox(height: 8),
+                              Center(
+                                child: Text(
+                                  'Загрузите изображение птицы',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: baseFontSize + 2,
+                                    color: isDarkMode ? Colors.blue[300] : Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
                 ),
-        ),
-        const SizedBox(height: 20),
-        FadeTransition(
-          opacity: _animationController,
-          child: SlideTransition(
-            position: _animationController.drive(
-              Tween<Offset>(
-                begin: const Offset(0.0, 0.4),
-                end: Offset.zero,
-              ).chain(CurveTween(curve: Curves.easeOut)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedElevatedButton(
-                  onPressed:
-                      _isLoading ? null : () => _pickImage(ImageSource.camera),
-                  icon: const Icon(Icons.camera_alt),
-                  child: Text(
-                    "Камера",
-                    style: TextStyle(fontSize: baseFontSize),
+              ),
+              const SizedBox(height: 20),
+              FadeTransition(
+                opacity: _animationController,
+                child: SlideTransition(
+                  position: _animationController.drive(
+                    Tween<Offset>(
+                      begin: const Offset(0.0, 0.4),
+                      end: Offset.zero,
+                    ).chain(CurveTween(curve: Curves.easeOut)),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        isDarkMode ? const Color(0xFF003366) : Colors.blue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                AnimatedElevatedButton(
-                  onPressed:
-                      _isLoading ? null : () => _pickImage(ImageSource.gallery),
-                  icon: const Icon(Icons.photo_library),
-                  child: Text(
-                    "Галерея",
-                    style: TextStyle(fontSize: baseFontSize),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        isDarkMode ? const Color(0xFF003366) : Colors.blue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
+                  child: Wrap(
+                    spacing: 20,
+                    runSpacing: 20,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      AnimatedElevatedButton(
+                        onPressed: _isLoading ? null : () => _pickImage(true),
+                        icon: const Icon(Icons.camera_alt),
+                        child: Text(
+                          "Камера",
+                          style: TextStyle(fontSize: baseFontSize),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isDarkMode ? const Color(0xFF003366) : Colors.blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        ),
+                      ),
+                      AnimatedElevatedButton(
+                        onPressed: _isLoading ? null : () => _pickImage(false),
+                        icon: const Icon(Icons.photo_library),
+                        child: Text(
+                          "Галерея",
+                          style: TextStyle(fontSize: baseFontSize),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isDarkMode ? const Color(0xFF003366) : Colors.blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
               const SizedBox(height: 20),
               if (_result.isNotEmpty || _isLoading)
                 Container(
@@ -1348,33 +1456,33 @@ Widget build(BuildContext context) {
                         ),
                 ),
               if (_showRescueButton && !isViewingFromHistory)
-  Padding(
-    padding: const EdgeInsets.only(top: 20),
-    child: Center(
-      child: ScaleTransition(
-        scale: _rescuePulseScale, // Анимация увеличения кнопки
-        child: AnimatedBuilder(
-          animation: _rescuePulseColor, // Анимация цвета
-          builder: (context, child) {
-            return ElevatedButton(
-              onPressed: _requestRescue,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _rescuePulseColor.value, // Цвет кнопки меняется с анимацией
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                minimumSize: const Size(300, 50),
-                alignment: Alignment.center,
-              ),
-              child: const Text(
-                'Отправить запрос в реабилитационный центр',
-                textAlign: TextAlign.center,
-              ),
-            );
-          },
-        ),
-      ),
-    ),
-  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: ScaleTransition(
+                      scale: _rescuePulseScale,
+                      child: AnimatedBuilder(
+                        animation: _rescuePulseColor,
+                        builder: (context, child) {
+                          return ElevatedButton(
+                            onPressed: _requestRescue,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _rescuePulseColor.value,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                              minimumSize: const Size(300, 50),
+                              alignment: Alignment.center,
+                            ),
+                            child: const Text(
+                              'Отправить запрос в реабилитационный центр',
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -1415,43 +1523,157 @@ Widget build(BuildContext context) {
   }
 }
 
+class SettingsScreen extends StatefulWidget {
+  final Function(bool) onThemeToggle;
+  final bool isDarkMode;
+  final Function(bool) onSaveCameraPhotosToggle;
+  final bool saveCameraPhotos;
+
+  const SettingsScreen({
+    Key? key,
+    required this.onThemeToggle,
+    required this.isDarkMode,
+    required this.onSaveCameraPhotosToggle,
+    required this.saveCameraPhotos,
+  }) : super(key: key);
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStateMixin {
+  late bool _isDark;
+  late bool _savePhotos;
+
+  @override
+  void initState() {
+    super.initState();
+    _isDark = widget.isDarkMode;
+    _savePhotos = widget.saveCameraPhotos;
+  }
+
+  void _onThemeChanged(bool value) {
+    setState(() => _isDark = value);
+    widget.onThemeToggle(value);
+  }
+
+  void _onSavePhotosChanged(bool value) {
+    setState(() => _savePhotos = value);
+    widget.onSaveCameraPhotosToggle(value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textColor = _isDark ? Colors.white : Colors.black;
+    final subTextColor = _isDark ? Colors.white70 : Colors.black87;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Настройки',
+          style: TextStyle(fontFamily: 'ComicSans', fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.brightness_6, color: subTextColor),
+              title: Text('Тема', style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+              subtitle: Text(_isDark ? 'Тёмная' : 'Светлая', style: TextStyle(color: subTextColor)),
+              trailing: Switch(
+                value: _isDark,
+                onChanged: _onThemeChanged,
+                activeColor: Colors.blue,
+                inactiveThumbColor: Colors.grey[300],
+                inactiveTrackColor: Colors.grey[400],
+              ),
+            ),
+            CheckboxTheme(
+              data: CheckboxThemeData(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                side: WidgetStateBorderSide.resolveWith(
+                  (states) => BorderSide(color: subTextColor, width: 2),
+                ),
+                fillColor: WidgetStateProperty.all(Colors.transparent),
+                checkColor: WidgetStateProperty.all(Colors.blue),
+              ),
+              child: CheckboxListTile(
+                value: _savePhotos,
+                onChanged: (value) => _onSavePhotosChanged(value!),
+                controlAffinity: ListTileControlAffinity.trailing,
+                title: Text(
+                  'Сохранять фотографии, сделанные через камеру',
+                  style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                ),
+                secondary: Icon(Icons.camera_alt, color: subTextColor),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Text(
+              'Авторы программы:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor),
+            ),
+            const SizedBox(height: 8),
+            Text('Кривошеенко Данил Дмитриевич', style: TextStyle(color: subTextColor, fontSize: 14)),
+            Text('Панов Максим Романович', style: TextStyle(color: subTextColor, fontSize: 14)),
+            Text('Полежаев Дмитрий Дмитриевич', style: TextStyle(color: subTextColor, fontSize: 14)),
+            const SizedBox(height: 30),
+            Text(
+              'Официальная почта:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor),
+            ),
+            const SizedBox(height: 8),
+            Text('perozhizni@gmail.com', style: TextStyle(color: subTextColor, fontSize: 14)),
+            const Spacer(),
+            Text(
+              'Версия приложения: 2.6.0',
+              style: TextStyle(color: subTextColor, fontStyle: FontStyle.italic, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class AnimatedElevatedButton extends StatefulWidget {
-  final VoidCallback? onPressed;
+  final Future<void> Function()? onPressed;
   final Widget? icon;
   final Widget child;
   final ButtonStyle? style;
 
   const AnimatedElevatedButton({
     super.key,
-    this.onPressed,
+    required this.onPressed,
     this.icon,
     required this.child,
     this.style,
   });
 
   @override
-  _AnimatedElevatedButtonState createState() => _AnimatedElevatedButtonState();
+  State<AnimatedElevatedButton> createState() => _AnimatedElevatedButtonState();
 }
 
-class _AnimatedElevatedButtonState extends State<AnimatedElevatedButton> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<Color?> _colorAnimation;
+class _AnimatedElevatedButtonState extends State<AnimatedElevatedButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+  bool _isAnimating = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
+      duration: const Duration(milliseconds: 100),
       vsync: this,
-      duration: const Duration(milliseconds: 150),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.85).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _colorAnimation = ColorTween(
-      begin: widget.style?.backgroundColor?.resolve({}) ?? Colors.blue,
-      end: (widget.style?.backgroundColor?.resolve({}) ?? Colors.blue).withOpacity(0.7),
-    ).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -1462,70 +1684,131 @@ class _AnimatedElevatedButtonState extends State<AnimatedElevatedButton> with Si
     super.dispose();
   }
 
+  Future<void> _handlePressed() async {
+    if (_isAnimating || widget.onPressed == null) return;
+
+    setState(() => _isAnimating = true);
+    await _controller.forward();
+    await _controller.reverse();
+    await Future.delayed(const Duration(milliseconds: 80));
+    await widget.onPressed?.call();
+    setState(() => _isAnimating = false);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) {
-        if (widget.onPressed != null) _controller.forward();
-      },
-      onTapUp: (_) {
-        if (widget.onPressed != null) {
-          _controller.reverse();
-          widget.onPressed!();
-        }
-      },
-      onTapCancel: () {
-        if (widget.onPressed != null) _controller.reverse();
-      },
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: AnimatedBuilder(
-          animation: _colorAnimation,
-          builder: (context, child) {
-            return ElevatedButton.icon(
-              onPressed: widget.onPressed,
-              style: widget.style?.merge(
-                ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(_colorAnimation.value),
-                  elevation: WidgetStateProperty.all(_controller.value * 8),
-                  shadowColor: WidgetStateProperty.all(Colors.black54),
-                ),
-              ),
-              icon: widget.icon ?? const SizedBox(),
-              label: widget.child,
-            );
-          },
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: ElevatedButton(
+        onPressed: widget.onPressed == null ? null : _handlePressed,
+        style: widget.style,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.icon != null) ...[
+              widget.icon!,
+              const SizedBox(width: 8),
+            ],
+            widget.child,
+          ],
         ),
       ),
     );
   }
 }
 
-class ImageZoomScreen extends StatelessWidget {
+class ImageZoomScreen extends StatefulWidget {
   final File image;
 
   const ImageZoomScreen({super.key, required this.image});
 
   @override
+  State<ImageZoomScreen> createState() => _ImageZoomScreenState();
+}
+
+class _ImageZoomScreenState extends State<ImageZoomScreen> {
+  Uint8List? _editedImageBytes;
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Просмотр изображения'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          tooltip: 'Назад',
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: _isLoading ? null : _editImage,
+          ),
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _isLoading || _editedImageBytes == null ? null : _saveEditedImage,
+          ),
+        ],
       ),
-      body: InteractiveViewer(
-        panEnabled: true,
-        minScale: 1,
-        maxScale: 5,
-        child: Center(
-          child: Image.file(image),
-        ),
+      body: Center(
+        child: _isLoading
+            ? const CircularProgressIndicator()
+            : _editedImageBytes != null
+                ? Image.memory(_editedImageBytes!)
+                : Image.file(widget.image),
       ),
     );
+  }
+
+  Future<void> _editImage() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final imageBytes = await widget.image.readAsBytes();
+
+      final editedImage = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageEditor(
+            image: imageBytes,
+          ),
+        ),
+      );
+
+      if (editedImage != null && editedImage is Uint8List) {
+        setState(() {
+          _editedImageBytes = editedImage;
+          _isLoading = false;
+        });
+      } else {
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка редактирования: $e'), duration: Duration(seconds: 2)),
+      );
+    }
+  }
+
+  Future<void> _saveEditedImage() async {
+    if (_editedImageBytes == null) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/edited_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final file = File(filePath);
+      await file.writeAsBytes(_editedImageBytes!);
+
+      Navigator.pop(context, file);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка сохранения: $e'), duration: Duration(seconds: 2)),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }
 
@@ -1536,27 +1819,28 @@ class AnimatedTextButton extends StatefulWidget {
 
   const AnimatedTextButton({
     super.key,
-    this.onPressed,
+    required this.onPressed,
     required this.child,
     this.style,
   });
 
   @override
-  _AnimatedTextButtonState createState() => _AnimatedTextButtonState();
+  State<AnimatedTextButton> createState() => _AnimatedTextButtonState();
 }
 
 class _AnimatedTextButtonState extends State<AnimatedTextButton> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+  bool _isAnimating = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
+      duration: const Duration(milliseconds: 100),
       vsync: this,
-      duration: const Duration(milliseconds: 150),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.85).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -1567,28 +1851,25 @@ class _AnimatedTextButtonState extends State<AnimatedTextButton> with SingleTick
     super.dispose();
   }
 
+  Future<void> _handlePressed() async {
+    if (_isAnimating || widget.onPressed == null) return;
+
+    setState(() => _isAnimating = true);
+    await _controller.forward();
+    await _controller.reverse();
+    await Future.delayed(const Duration(milliseconds: 80));
+    widget.onPressed?.call();
+    setState(() => _isAnimating = false);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) {
-        if (widget.onPressed != null) _controller.forward();
-      },
-      onTapUp: (_) {
-        if (widget.onPressed != null) {
-          _controller.reverse();
-          widget.onPressed!();
-        }
-      },
-      onTapCancel: () {
-        if (widget.onPressed != null) _controller.reverse();
-      },
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: TextButton(
-          onPressed: widget.onPressed,
-          style: widget.style,
-          child: widget.child,
-        ),
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: TextButton(
+        onPressed: widget.onPressed == null ? null : _handlePressed,
+        style: widget.style,
+        child: widget.child,
       ),
     );
   }
@@ -1600,8 +1881,8 @@ class RescueRequestDialog extends StatefulWidget {
   final String location;
   final String locationLink;
   final File? image;
-  final Function(String) onSubmit;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
+  final Future<void> Function(String message) onSubmit;
 
   const RescueRequestDialog({
     super.key,
@@ -1609,9 +1890,9 @@ class RescueRequestDialog extends StatefulWidget {
     required this.condition,
     required this.location,
     required this.locationLink,
-    required this.image,
-    required this.onSubmit,
+    this.image,
     required this.scaffoldMessengerKey,
+    required this.onSubmit,
   });
 
   @override
@@ -1620,7 +1901,7 @@ class RescueRequestDialog extends StatefulWidget {
 
 class _RescueRequestDialogState extends State<RescueRequestDialog> {
   final TextEditingController _messageController = TextEditingController();
-  bool _isSending = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -1630,19 +1911,13 @@ class _RescueRequestDialogState extends State<RescueRequestDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final baseFontSize = screenWidth < 360 ? 12.0 : screenWidth < 600 ? 14.0 : 16.0;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return AlertDialog(
-      title: Center(
+      title: const Center(
         child: Text(
-          'Запрос на спасение',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: baseFontSize + 4,
-            color: isDarkMode ? Colors.white : Colors.black,
-          ),
+          'Запрос в реабилитационный центр',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       content: SingleChildScrollView(
@@ -1650,193 +1925,82 @@ class _RescueRequestDialogState extends State<RescueRequestDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Вид: ${widget.species}',
-              style: TextStyle(
-                fontSize: baseFontSize,
-                color: isDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Состояние: ${widget.condition}',
-              style: TextStyle(
-                fontSize: baseFontSize,
-                color: isDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Text(
-                  'Местоположение:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: baseFontSize,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-                const Spacer(),
-                AnimatedTextButton(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: widget.locationLink));
-                    widget.scaffoldMessengerKey.currentState?.showSnackBar(
-                      const SnackBar(content: Text('Местоположение скопировано'), duration: Duration(seconds: 2)),
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    padding: const EdgeInsets.only(left: 8),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.content_copy,
-                        size: 16,
-                        color: Colors.blue,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Копировать',
-                        style: TextStyle(fontSize: baseFontSize),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              widget.location,
-              style: TextStyle(
-                fontSize: baseFontSize,
-                color: isDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Center(
+            Text('Вид: ${widget.species}'),
+            const SizedBox(height: 8),
+            Text('Состояние: ${widget.condition}'),
+            const SizedBox(height: 8),
+            Text('Местоположение: ${widget.location}'),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () async {
+                final url = Uri.parse(widget.locationLink);
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                } else {
+                  widget.scaffoldMessengerKey.currentState?.showSnackBar(
+                    const SnackBar(content: Text('Не удалось открыть карту'), duration: Duration(seconds: 2)),
+                  );
+                }
+              },
               child: Text(
-                'Дополнительное сообщение:',
+                'Открыть на карте',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: baseFontSize,
-                  color: isDarkMode ? Colors.white : Colors.black,
+                  color: isDarkMode ? Colors.blue[300] : Colors.blue,
+                  decoration: TextDecoration.underline,
                 ),
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 16),
+            if (widget.image != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(
+                    widget.image!,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             TextField(
               controller: _messageController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.blue, width: 1.0),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                contentPadding: const EdgeInsets.all(12),
-                filled: true,
+                labelText: 'Дополнительное сообщение',
+                border: const OutlineInputBorder(),
                 fillColor: isDarkMode ? Colors.grey[800] : Colors.white,
+                filled: true,
               ),
-              maxLines: 3,
-              style: TextStyle(
-                fontSize: baseFontSize,
-                color: isDarkMode ? Colors.white : Colors.black,
-              ),
+              maxLines: 4,
             ),
           ],
         ),
       ),
+      actionsAlignment: MainAxisAlignment.center,
       actions: [
-  Center(
-    child: Column(
-      children: [
         AnimatedTextButton(
-          onPressed: () async {
-            if (await canLaunchUrl(Uri.parse(widget.locationLink))) {
-              await launchUrl(Uri.parse(widget.locationLink));
-            } else {
-              widget.scaffoldMessengerKey.currentState?.showSnackBar(
-                const SnackBar(content: Text('Не удалось открыть карту'), duration: Duration(seconds: 2)),
-              );
-            }
-          },
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.green,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.map, color: Colors.green),
-              const SizedBox(width: 8),
-              Text(
-                'Открыть карту',
-                style: TextStyle(
-                  fontSize: baseFontSize,
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+          onPressed: _isLoading ? null : () => Navigator.pop(context),
+          style: TextButton.styleFrom(foregroundColor: Colors.blue),
+          child: const Text('Отмена'),
         ),
-        const SizedBox(height: 10),
         AnimatedTextButton(
-          onPressed: _isSending ? null : () => Navigator.pop(context),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.blue,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          ),
-          child: Text(
-            'Отмена',
-            style: TextStyle(
-              fontSize: baseFontSize,
-              color: isDarkMode ? Colors.white : Colors.blue,
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-              AnimatedElevatedButton(
-                onPressed: _isSending
-                    ? null
-                    : () async {
-                        setState(() => _isSending = true);
-                        await widget.onSubmit(_messageController.text);
-                        if (mounted) {
-                          setState(() => _isSending = false);
-                          Navigator.pop(context);
-                        }
-                      },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                child: _isSending
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : Text(
-                        'Подтвердить отправку',
-                        style: TextStyle(fontSize: baseFontSize),
-                      ),
-              ),
-            ],
-          ),
+          onPressed: _isLoading
+              ? null
+              : () async {
+                  setState(() => _isLoading = true);
+                  try {
+                    await widget.onSubmit(_messageController.text);
+                    if (mounted) Navigator.pop(context);
+                  } catch (e) {
+                    widget.scaffoldMessengerKey.currentState?.showSnackBar(
+                      SnackBar(content: Text('Ошибка: $e'), duration: Duration(seconds: 2)),
+                    );
+                  } finally {
+                    if (mounted) setState(() => _isLoading = false);
+                  }
+                },
+          style: TextButton.styleFrom(foregroundColor: Colors.blue),
+          child: _isLoading ? const CircularProgressIndicator() : const Text('Отправить'),
         ),
       ],
     );
