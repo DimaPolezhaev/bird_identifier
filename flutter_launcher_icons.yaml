@@ -1,6 +1,0 @@
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/icons/icon.jpeg" # Путь ОТНОСИТЕЛЬНО корня проекта
-  adaptive_icon_background: "#FFFFFF" # Белый фон для Android
-  remove_alpha_ios: true # Удаление прозрачности для iOS
