@@ -49,6 +49,7 @@ git clone https://github.com/ваш-username/bird_identifier.git
 cd bird_identifier
 flutter pub get
 flutter run
+```
 
 
 🎥 Демонстрация работы
