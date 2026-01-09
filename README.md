@@ -100,8 +100,8 @@ flutter run
 
 
 ## 📬 Контакты
-* Telegram: @PeroZhizni
-* Email: perozhizni@gmail.com
++ Telegram: @PeroZhizni
++ Email: perozhizni@gmail.com
 
 
 Птицы нуждаются в нашей помощи. Каждое фото, каждый анализ – шаг к их спасению. 🕊️
