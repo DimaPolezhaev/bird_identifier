@@ -67,6 +67,10 @@ dependencies:
   flutter_exif_rotation: ^0.5.1
   screenshot: ^3.0.0
   font_awesome_flutter: ^10.9.1
+  android_intent_plus: ^6.0.0
+  share_plus: ^12.0.1
+  flutter_chat_bubble: ^2.0.2
+  cached_network_image: ^3.3.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -93,13 +97,14 @@ dependency_overrides:
 flutter:
   assets:
     - assets/icons/light.jpeg
+    - assets/icons/app_kubgu.jpg
     - assets/animations/Animation.json
     - assets/animations/Loading.json
     - assets/birdnet/audio-model.tflite
     - assets/birdnet/meta-model.tflite
     - assets/birdnet/labels/ru.txt
     - assets/birdnet/labels/en_us.txt 
-    - assets/splash.png
+    - assets/splash.jpg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
